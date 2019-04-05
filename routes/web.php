@@ -18,3 +18,11 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::group(['prefix' => 'sisfalta', 'middleware' => 'auth', 'as' => 'sisfalta.'], function (){
+    Route::get('/', function (){
+        return view('sisfaltas.index');
+    })->name('index');
+    Route::resource('alunos', 'Sisfaltas\AlunoController');
+    Route::resource('cursos', 'Sisfaltas\CursoController');
+    Route::resource('faltas', 'Sisfaltas\FaltaController');
+});

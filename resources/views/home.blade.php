@@ -2,19 +2,14 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+    <div class="row">
+        <div class="col-md-4">
             <div class="card">
-                <div class="card-header">Dashboard</div>
+                <div class="card-header">Controle de frequência</div>
 
                 <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    You are logged in!
+                    <p class="text-center">Acessar o controle de frequência e alerta aos pais dos estudantes do Técnico Integrado</p>
+                    <a href="{{ route('sisfalta.index') }}" class="btn btn-primary btn-block mt-3 p-2">Acessar SISFALTA</a>
                 </div>
             </div>
         </div>
