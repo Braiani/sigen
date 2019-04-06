@@ -23,6 +23,6 @@ Route::group(['prefix' => 'sisfalta', 'middleware' => 'auth', 'as' => 'sisfalta.
         return view('sisfaltas.index');
     })->name('index');
     Route::resource('alunos', 'Sisfaltas\AlunoController');
-    Route::resource('cursos', 'Sisfaltas\CursoController');
+    Route::resource('cursos', 'Sisfaltas\CursoController')->except(['show']);
     Route::resource('faltas', 'Sisfaltas\FaltaController');
 });

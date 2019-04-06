@@ -28,12 +28,10 @@
                                         <td>{{ $curso->sigla }}</td>
                                         <td>{{ $curso->email }}</td>
                                         <td>
-                                            <form action="{{ route('sisfalta.cursos.destroy', $curso->id) }}" method="post">
-                                                @csrf
-                                                @method('DELETE')
-                                                <a href="{{ route('sisfalta.cursos.edit', $curso->id) }}" class="btn btn-warning">Editar</a>
-                                                <button class="btn btn-danger">Excluir</button>
-                                            </form>
+                                            <a href="{{ route('sisfalta.cursos.edit', $curso->id) }}" class="btn btn-warning">Editar</a>
+                                            <button class="btn btn-danger btn-delete" data-id="{{ $curso->id }}" data-toggle="modal" data-target="#modalExluir">
+                                                Excluir
+                                            </button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -45,4 +43,36 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalExluir" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Excluir curso</h5>
+                </div>
+                <div class="modal-body">
+                    <h5>Confirma a excluão?</h5>
+                    <form id="form-delete" action="#" method="post">
+                        @csrf
+                        @method('DELETE')
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="submit" form="form-delete" class="btn btn-danger">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
+
+@push('script')
+    <script>
+        $(document).on('pageReady', function () {
+            $(".btn-delete").on('click', function () {
+                $('#form-delete')[0].action = '{{ route('sisfalta.cursos.destroy', '__id') }}'.replace('__id', $(this).data('id'));
+            })
+        });
+    </script>
+@endpush
