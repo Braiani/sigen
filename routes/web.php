@@ -25,4 +25,5 @@ Route::group(['prefix' => 'sisfalta', 'middleware' => 'auth', 'as' => 'sisfalta.
     Route::resource('alunos', 'Sisfaltas\AlunoController');
     Route::resource('cursos', 'Sisfaltas\CursoController')->except(['show']);
     Route::resource('faltas', 'Sisfaltas\FaltaController');
+    Route::post('/faltas/upload/arquivo', 'Sisfaltas\FaltaController@upload')->name('faltas.arquivo');
 });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Sisfaltas;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use League\Csv\Reader;
 
 class FaltaController extends Controller
 {
@@ -82,4 +83,61 @@ class FaltaController extends Controller
     {
         //
     }
+
+    public function upload(Request $request)
+    {
+        $data = $request->validate([
+            'arquivo' => 'required|file'
+        ]);
+
+        $csv = Reader::createFromPath($data['arquivo']);
+
+        $csv->setHeaderOffset(0);
+        
+        foreach ($csv as $item) {
+            dd($item);
+        }
+
+        return $csv;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
