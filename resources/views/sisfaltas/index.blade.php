@@ -9,16 +9,40 @@
                         <h3>Carregar dados por arquivo</h3>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('sisfalta.faltas.arquivo') }}" method="post" enctype="multipart/form-data">
-                            @csrf
-                            <div class="form-group">
-                                <label for="arquivo">Selecione o arquivo:</label>
-                                <input type="file" class="form-control-file" name="arquivo" id="arquivo">
-                            </div>
-                            <div class="form-group">
-                                <button class="btn btn-primary" type="submit">Enviar</button>
-                            </div>
-                        </form>
+                        <div class="col-12">
+                            <form class="" action="{{ route('sisfalta.faltas.arquivo') }}" method="post" enctype="multipart/form-data">
+                                @csrf
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="data_ini">Data início:</label>
+                                            <input class="form-control" type="date" name="data_ini" id="data_ini" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="data_fim">Data final:</label>
+                                            <input class="form-control" type="date" name="data_fim" id="data_fim" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="arquivo">Selecione o arquivo:</label>
+                                            <input type="file" class="form-control-file" name="arquivo" id="arquivo">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <button class="btn btn-outline-info btn-block" type="submit">Enviar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

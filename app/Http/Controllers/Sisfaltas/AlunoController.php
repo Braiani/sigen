@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Sisfaltas;
 
+use App\Aluno;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -14,7 +15,8 @@ class AlunoController extends Controller
      */
     public function index()
     {
-        return view('sisfaltas.alunos.index');
+        $alunos = Aluno::with('curso')->paginate();
+        return view('sisfaltas.alunos.index', compact('alunos'));
     }
 
     /**
