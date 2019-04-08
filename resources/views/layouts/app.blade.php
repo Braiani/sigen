@@ -16,6 +16,7 @@
     <!-- Styles -->
     @toastr_css
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @stack('css')
 </head>
 <body>
 <div id="app">

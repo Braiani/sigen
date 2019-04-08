@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Sisfaltas;
 
+use App\Aluno;
+use App\Falta;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -14,7 +16,10 @@ class FaltaController extends Controller
      */
     public function index()
     {
-        //
+        $alunos = Aluno::has('faltas')->with('faltas')->paginate();
+        $periodos = Falta::select('data_fim', 'data_inicio')->groupBy('data_fim')->groupBy('data_inicio')->distinct()->get();
+
+        return view('sisfaltas.faltas.index', compact('alunos', 'periodos'));
     }
 
     /**
