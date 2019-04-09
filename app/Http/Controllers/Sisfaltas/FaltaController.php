@@ -14,10 +14,19 @@ class FaltaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $alunos = Aluno::has('faltas')->with('faltas')->paginate();
-        $periodos = Falta::select('data_fim', 'data_inicio')->groupBy('data_fim')->groupBy('data_inicio')->distinct()->get();
+        $request->has('periodo') ? $selectPeriodo = explode(',', $request->periodo) : $selectPeriodo = false;
+        $periodos = Falta::select('data_fim', 'data_inicio')->distinct()->get();
+
+
+        if ($selectPeriodo) {
+            $alunos = Aluno::whereHas('faltas', function ($q) use ($selectPeriodo) {
+                $q->where('data_inicio', $selectPeriodo[0])->where('data_fim', $selectPeriodo[1]);
+            })->with(['faltas' => function ($q) use ($selectPeriodo) {
+                $q->where('data_inicio', $selectPeriodo[0])->where('data_fim', $selectPeriodo[1]);
+            }])->paginate();
+        }
 
         return view('sisfaltas.faltas.index', compact('alunos', 'periodos'));
     }
