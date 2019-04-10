@@ -25,4 +25,14 @@ class Falta extends Model
     {
         return $this->belongsTo('App\Aluno');
     }
+
+    public function getDataIniBrAttribute()
+    {
+        return $this->data_inicio->format('d/m/Y');
+    }
+
+    public function getDataFimBrAttribute()
+    {
+        return $this->data_fim->format('d/m/Y');
+    }
 }

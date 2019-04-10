@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Sisfaltas;
 use App\Aluno;
 use App\Falta;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendMailPaisJob;
 use Illuminate\Http\Request;
 
 class FaltaController extends Controller
@@ -21,14 +22,35 @@ class FaltaController extends Controller
 
 
         if ($selectPeriodo) {
-            $alunos = Aluno::whereHas('faltas', function ($q) use ($selectPeriodo) {
+            $alunos = Aluno::withAndWhereHas('faltas', function ($q) use ($selectPeriodo) {
                 $q->where('data_inicio', $selectPeriodo[0])->where('data_fim', $selectPeriodo[1]);
-            })->with(['faltas' => function ($q) use ($selectPeriodo) {
-                $q->where('data_inicio', $selectPeriodo[0])->where('data_fim', $selectPeriodo[1]);
-            }])->paginate();
+            })->paginate();
         }
 
         return view('sisfaltas.faltas.index', compact('alunos', 'periodos'));
+    }
+
+    public function sendEmail(Request $request)
+    {
+        $request->validate([
+            'periodo' => 'required'
+        ]);
+
+        $selectPeriodo = explode(',', $request->periodo);
+
+        $alunos = Aluno::withAndWhereHas('faltas', function ($q) use ($selectPeriodo) {
+            $q->where('data_inicio', $selectPeriodo[0])->where('data_fim', $selectPeriodo[1]);
+        })->with('curso')->get();
+
+        $aluno = $alunos->first();
+
+        return view('sisfaltas.mails.mailPais', compact('aluno'));
+
+        $this->dispatch(new SendMailPaisJob($alunos));
+
+        toastr('Processo de envio de e-mails iniciado!', 'success');
+
+        return redirect()->route('sisfaltas.faltas.index');
     }
 
     /**
