@@ -42,15 +42,15 @@ class FaltaController extends Controller
             $q->where('data_inicio', $selectPeriodo[0])->where('data_fim', $selectPeriodo[1]);
         })->with('curso')->get();
 
-        $aluno = $alunos->first();
+        /*$aluno = $alunos->first();
 
-        return view('sisfaltas.mails.mailPais', compact('aluno'));
+        return view('sisfaltas.mails.mailPais', compact('aluno'));*/
 
         $this->dispatch(new SendMailPaisJob($alunos));
 
         toastr('Processo de envio de e-mails iniciado!', 'success');
 
-        return redirect()->route('sisfaltas.faltas.index');
+        return redirect()->route('sisfalta.faltas.index');
     }
 
     /**

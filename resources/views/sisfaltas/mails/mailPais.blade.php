@@ -8,6 +8,9 @@
         table, th, td {
             border: 1px solid black;
         }
+        td {
+            vertical-align: middle !important;
+        }
     </style>
     <meta charset="UTF-8">
     <title>Comunicado de Faltas - {{ $aluno->faltas->first()->dataIniBr }}
