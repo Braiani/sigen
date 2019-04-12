@@ -11,9 +11,9 @@ class Falta extends Model
 
     protected $dates = ['data_inicio', 'data_fim'];
 
-    public function getFaltaAttribute($value)
+    public function getFaltaFormatadoAttribute()
     {
-        return number_format($value, 1, ',', '.');
+        return number_format($this->falta, 1, ',', '.');
     }
 
     public function getDisciplinaAttribute($value)

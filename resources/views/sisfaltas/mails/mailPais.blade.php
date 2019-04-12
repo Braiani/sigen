@@ -40,7 +40,7 @@
                 {{ strtoupper($falta->disciplina) }}
             </td>
             <td>
-                {{ $falta->falta }}%
+                {{ $falta->faltaFormatado }}%
             </td>
             <td>
                 De {{ $falta->dataIniBr }}

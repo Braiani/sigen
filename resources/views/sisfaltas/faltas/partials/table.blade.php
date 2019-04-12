@@ -24,7 +24,7 @@
                                     <td>
                                         <ul>
                                             @foreach($aluno->faltas as $falta)
-                                                <li>{{ strtoupper($falta->disciplina) }} - ({{ $falta->falta }}%)</li>
+                                                <li>{{ strtoupper($falta->disciplina) }} - ({{ $falta->faltaFormatado }}%)</li>
                                             @endforeach
                                         </ul>
                                     </td>

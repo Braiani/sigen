@@ -42,8 +42,8 @@ class SendMailPaisJob implements ShouldQueue
         $destinatarios = $this->getDestinatarios($aluno, $faltas);
         $assunto = "[HOMOLOG.] Comunicado de Faltas - " . $faltas->first()->dataIniBr . " a " . $faltas->first()->dataFimBr;
 
-        try{
-            Mail::send('sisfaltas.mails.mailPais', compact('aluno', 'faltas'), function ($message) use ($destinatarios, $assunto, $aluno){
+        try {
+            Mail::send('sisfaltas.mails.mailPais', compact('aluno', 'faltas'), function ($message) use ($destinatarios, $assunto, $aluno) {
                 $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
                 $message->replyTo($aluno->curso->email, $aluno->curso->nome);
                 $message->to($destinatarios);
@@ -54,7 +54,7 @@ class SendMailPaisJob implements ShouldQueue
                 $falta->enviado = true;
                 $falta->save();
             }
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             Log::error($e->getMessage()); //Implementar envio de erro via Slack
         }
 
@@ -68,20 +68,20 @@ class SendMailPaisJob implements ShouldQueue
         $emailAssistenteSocial = env('EMAIL_ASSISTENTESOCIAIS');
         $emailDiren = env('EMAIL_DIREN');
 
-        $maxFaltas = (float) $faltas->max('falta');
+        $maxFaltas = (float) $aluno->faltas->max('falta');
 
-        if ($maxFaltas > 15 and $maxFaltas < 20){
+        array_push($resposta, $aluno->email);
+
+        if ($maxFaltas > 15 and $maxFaltas < 20) {
             array_push($resposta, $emailCoordenacao);
             array_push($resposta, $emailAssistentesAlunos);
-        }elseif ($maxFaltas > 20){
+        } elseif ($maxFaltas > 20) {
             array_push($resposta, $emailDiren);
             $assistentes = explode(',', $emailAssistenteSocial);
             foreach ($assistentes as $assistente) {
                 array_push($resposta, $assistente);
             }
         }
-
-        array_push($resposta, $aluno->email);
 
         return $resposta;
     }
