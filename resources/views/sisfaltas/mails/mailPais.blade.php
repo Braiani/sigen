@@ -13,14 +13,14 @@
         }
     </style>
     <meta charset="UTF-8">
-    <title>Comunicado de Faltas - {{ $aluno->faltas->first()->dataIniBr }}
-        a {{ $aluno->faltas->first()->dataFimBr }}</title>
+    <title>Comunicado de Faltas - {{ $faltas->first()->dataIniBr }}
+        a {{ $faltas->first()->dataFimBr }}</title>
 </head>
 <body>
-{{--<img src="{{ $message->embed(public_path() . '/img/email-head.png') }}" width="420" height="61"><br>--}}
-<img src="{{ asset('/img/email-head.png') }}" width="420" height="61"><br>
+<img src="{{ $message->embed(public_path() . '/img/email-head.png') }}" width="420" height="61"><br>
+{{--<img src="{{ asset('/img/email-head.png') }}" width="420" height="61"><br>--}}
 <p>Prezados pais e/ou responsáveis, bom dia!</p>
-<p>Informamos que no período entre {{ $aluno->faltas->first()->dataIniBr }} e {{ $aluno->faltas->first()->dataFimBr }}
+<p>Informamos que no período entre {{ $faltas->first()->dataIniBr }} e {{ $faltas->first()->dataFimBr }}
     seu/sua filho(a) apresentou o seguinte percentual de faltas:</p>
 <p>
 <table>
@@ -32,7 +32,7 @@
     <th>Período</th>
     </thead>
     <tbody>
-    @foreach($aluno->faltas as $falta)
+    @foreach($faltas as $falta)
         <tr>
             <td>{{ strtoupper($aluno->nome) }}</td>
             <td>{{ $aluno->curso->nome }}</td>

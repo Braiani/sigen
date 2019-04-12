@@ -13,6 +13,7 @@ class FaltaController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -30,6 +31,10 @@ class FaltaController extends Controller
         return view('sisfaltas.faltas.index', compact('alunos', 'periodos'));
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function sendEmail(Request $request)
     {
         $request->validate([
@@ -46,7 +51,12 @@ class FaltaController extends Controller
 
         return view('sisfaltas.mails.mailPais', compact('aluno'));*/
 
-        $this->dispatch(new SendMailPaisJob($alunos));
+        foreach ($alunos as $aluno) {
+            if ($aluno->faltas->max('falta') > 0){
+                $faltas = $aluno->faltas;
+                $this->dispatch(new SendMailPaisJob($aluno, $faltas));
+            }
+        }
 
         toastr('Processo de envio de e-mails iniciado!', 'success');
 
