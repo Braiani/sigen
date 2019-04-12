@@ -46,6 +46,8 @@ class FaltaController extends Controller
 
         return view('sisfaltas.mails.mailPais', compact('aluno'));*/
 
+//        dd($alunos);
+
         $this->dispatch(new SendMailPaisJob($alunos));
 
         toastr('Processo de envio de e-mails iniciado!', 'success');

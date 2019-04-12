@@ -10,7 +10,7 @@
                     </div>
                     <div class="card-body">
                         <div class="col-12">
-                            <form class="" action="{{ route('sisfalta.faltas.arquivo') }}" method="post" enctype="multipart/form-data">
+                            <form id="form-upload-csv" action="{{ route('sisfalta.faltas.arquivo') }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
                                     <div class="col-6">
@@ -80,4 +80,30 @@
             </div>
         </div>
     </div>
+
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Carregando...</h5>
+                </div>
+                <div class="modal-body">
+                    <img src="https://cdn-images-1.medium.com/max/1600/1*8NJgObmgEVhNWVt3poeTaA.gif" alt="carregando">
+                    <div class="col-12 text-center">
+                        <h3>Carregando informações da planilha, por favor não feche essa janela!</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
+
+@push('script')
+    <script>
+        $(document).on('pageReady', function (e) {
+            $("#form-upload-csv").on('submit', function (e) {
+                $('.modal').modal('toggle');
+            });
+        });
+    </script>
+@endpush
