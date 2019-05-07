@@ -44,17 +44,23 @@ class FaltaController extends Controller
         $selectPeriodo = explode(',', $request->periodo);
 
         $alunos = Aluno::withAndWhereHas('faltas', function ($q) use ($selectPeriodo) {
-            $q->where('data_inicio', $selectPeriodo[0])->where('data_fim', $selectPeriodo[1]);
+            $q->where('data_inicio', $selectPeriodo[0])->where('data_fim', $selectPeriodo[1])->where('enviado', false);
         })->with('curso')->get();
 
         /*$aluno = $alunos->first();
+        $faltas = $aluno->faltas;
 
-        return view('sisfaltas.mails.mailPais', compact('aluno'));*/
+        return view('sisfaltas.mails.mailPais', compact('aluno', 'faltas'));*/
 
+        $i = 0;
         foreach ($alunos as $aluno) {
-            if ($aluno->faltas->max('falta') > 0){
+            if ($i == 15) {
+                break;
+            }
+            if ($aluno->faltas->max('falta') > 0) {
                 $faltas = $aluno->faltas;
                 $this->dispatch(new SendMailPaisJob($aluno, $faltas));
+                $i++;
             }
         }
 
@@ -63,69 +69,43 @@ class FaltaController extends Controller
         return redirect()->route('sisfalta.faltas.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function getData(Request $request)
     {
-        //
-    }
+        $offset = $request->get('offset');
+        $limit = $request->get('limit');
+        $search = $request->has('search') ? $request->get('search') : false;
+        $sort = $request->has('sort') ? $request->get('sort') : false;
+        $request->has('periodo') ? $selectPeriodo = explode(',', $request->periodo) : $selectPeriodo = false;
+        $enviado = $request->has('enviado') ? $request->get('enviado') : false;
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $query = new Aluno();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+        $query = $query->withAndWhereHas('faltas', function ($q) use ($selectPeriodo) {
+            $q->where('data_inicio', $selectPeriodo[0])->where('data_fim', $selectPeriodo[1]);
+        });
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+        $query = $query->when($search, function ($query) use ($search) {
+            $query->where('nome', 'LIKE', "%{$search}%")->orWhereIn('curso_id', function ($query) use ($search) {
+                $query->select('id')->from('cursos')->where('nome', 'LIKE', "%{$search}%");
+            })->orWhere('email', 'LIKE', "%{$search}%")->orWhereHas('faltas', function ($query) use ($search) {
+                $query->where('disciplina', 'LIKE', "%{$search}%");
+            });
+        });
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        if ($enviado !== "-1") {
+            $query = $query->whereHas('faltas', function ($q) use ($enviado) {
+                $q->where('enviado', $enviado);
+            });
+        }
+
+        $total = $query->count();
+        $registros = $query->offset($offset)->limit($limit)->with('curso')->get();
+        $resposta = array(
+            'total' => $total,
+            'count' => $registros->count(),
+            'rows' => $registros,
+        );
+        return $resposta;
     }
 }

@@ -40,11 +40,11 @@ class SendMailPaisJob implements ShouldQueue
         $faltas = $this->faltas;
 
         $destinatarios = $this->getDestinatarios($aluno, $faltas);
-        $assunto = "[HOMOLOG.] Comunicado de Faltas - " . $faltas->first()->dataIniBr . " a " . $faltas->first()->dataFimBr;
+        $assunto = "Comunicado de Faltas - " . $faltas->first()->dataIniBr . " a " . $faltas->first()->dataFimBr;
 
         try {
             Mail::send('sisfaltas.mails.mailPais', compact('aluno', 'faltas'), function ($message) use ($destinatarios, $assunto, $aluno) {
-                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+                $message->from(config('mail.from.address'), config('mail.from.name'));
                 $message->replyTo($aluno->curso->email, $aluno->curso->nome);
                 $message->to($destinatarios);
                 $message->subject($assunto);

@@ -15,7 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+Auth::routes(['register' => false]);
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['prefix' => 'sisfalta', 'middleware' => 'auth', 'as' => 'sisfalta.'], function (){
@@ -25,6 +25,7 @@ Route::group(['prefix' => 'sisfalta', 'middleware' => 'auth', 'as' => 'sisfalta.
     Route::resource('alunos', 'Sisfaltas\AlunoController');
     Route::resource('cursos', 'Sisfaltas\CursoController')->except(['show']);
     Route::resource('faltas', 'Sisfaltas\FaltaController')->only(['index']);
+    Route::get('/faltas/table/', 'Sisfaltas\FaltaController@getData')->name('faltas.table');
     Route::post('/faltas/upload/arquivo', 'Sisfaltas\FaltaUploadController')->name('faltas.arquivo');
     Route::get('/faltas/enviar-emails', 'Sisfaltas\FaltaController@sendEmail')->name('faltas.enviar');
 });
