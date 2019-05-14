@@ -52,15 +52,11 @@ class FaltaController extends Controller
 
         return view('sisfaltas.mails.mailPais', compact('aluno', 'faltas'));*/
 
-        $i = 0;
         foreach ($alunos as $aluno) {
-            if ($i == 15) {
-                break;
-            }
+
             if ($aluno->faltas->max('falta') > 0) {
                 $faltas = $aluno->faltas;
                 $this->dispatch(new SendMailPaisJob($aluno, $faltas));
-                $i++;
             }
         }
 
