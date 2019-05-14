@@ -8,7 +8,6 @@ use App\Falta;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use League\Csv\Reader;
 
@@ -26,6 +25,8 @@ class FaltaUploadController extends Controller
             'data_fim' => 'required|date'
         ]);
 
+        env('APP_ENV') !== 'production' ?: set_time_limit(180);
+
         $csv = Reader::createFromPath($data['arquivo']);
 
         $csv->setHeaderOffset(0);
@@ -33,7 +34,7 @@ class FaltaUploadController extends Controller
         foreach ($csv as $item) {
             $curso = $this->verifyCoordenacao($item['coordenacao']);
 
-            if (! $curso){
+            if (!$curso) {
                 continue;
             }
             $aluno = $this->getAluno($item['estudante'], $curso, $item['email']);
@@ -85,8 +86,8 @@ class FaltaUploadController extends Controller
      */
     protected function addFaltaAluno(Aluno $aluno, $linhaCsv, array $periodo)
     {
-        $nFaltas = (int) $linhaCsv['faltas'];
-        $totalAulas = (int) $linhaCsv['quantidade_aulas'];
+        $nFaltas = (int)$linhaCsv['faltas'];
+        $totalAulas = (int)$linhaCsv['quantidade_aulas'];
         $falta = ($nFaltas / $totalAulas) * 100;
 
         $addFalta = [

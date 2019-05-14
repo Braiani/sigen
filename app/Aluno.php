@@ -23,4 +23,9 @@ class Aluno extends Model
         return $query->whereHas($relation, $constraint)
             ->with([$relation => $constraint]);
     }
+
+    public function getEmailAttribute($value)
+    {
+        return strtolower($value);
+    }
 }
