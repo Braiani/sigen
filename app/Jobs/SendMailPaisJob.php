@@ -75,7 +75,7 @@ class SendMailPaisJob implements ShouldQueue
         if ($maxFaltas > 15 and $maxFaltas < 20) {
             array_push($resposta, $emailCoordenacao);
             array_push($resposta, $emailAssistentesAlunos);
-        } elseif ($maxFaltas > 20) {
+        } elseif ($maxFaltas >= 20) {
             array_push($resposta, $emailDiren);
             $assistentes = explode(',', $emailAssistenteSocial);
             foreach ($assistentes as $assistente) {
