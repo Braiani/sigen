@@ -86,9 +86,9 @@
 
             $.each(value, function (index, valor) {
                 if (index === 0) {
-                    resposta = valor.disciplina + "(" + valor.falta + "%) <br>";
+                    resposta = valor.disciplina + " (" + valor.falta.toFixed(2) + "%) <br>";
                 } else {
-                    resposta = resposta + valor.disciplina + " (" + valor.falta + "%) <br>";
+                    resposta = resposta + valor.disciplina + " (" + valor.falta.toFixed(2) + "%) <br>";
                 }
             });
             return resposta;

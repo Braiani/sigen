@@ -65,6 +65,21 @@ class FaltaController extends Controller
         return redirect()->route('sisfalta.faltas.index');
     }
 
+    public function sendCoords(Request $request)
+    {
+        $request->validate([
+            'periodo' => 'required'
+        ]);
+
+        $selectPeriodo = explode(',', $request->periodo);
+
+        $alunos = Aluno::withAndWhereHas('faltas', function ($q) use ($selectPeriodo) {
+            $q->where('data_inicio', $selectPeriodo[0])->where('data_fim', $selectPeriodo[1])->where('enviado', true);
+        })->with('curso')->get();
+
+        return $alunos;
+    }
+
     public function getData(Request $request)
     {
         $offset = $request->get('offset');
