@@ -28,4 +28,5 @@ Route::group(['prefix' => 'sisfalta', 'middleware' => 'auth', 'as' => 'sisfalta.
     Route::get('/faltas/table/', 'Sisfaltas\FaltaController@getData')->name('faltas.table');
     Route::post('/faltas/upload/arquivo', 'Sisfaltas\FaltaUploadController')->name('faltas.arquivo');
     Route::get('/faltas/enviar-emails', 'Sisfaltas\FaltaController@sendEmail')->name('faltas.enviar');
+    Route::get('/faltas/enviar-relatorio-coords', 'Sisfaltas\FaltaController@sendCoords')->name('faltas.relatorio.coords');
 });

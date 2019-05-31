@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Sisfaltas;
 use App\Aluno;
 use App\Falta;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendMailCoordsJob;
 use App\Jobs\SendMailPaisJob;
 use Illuminate\Http\Request;
 
@@ -61,6 +62,30 @@ class FaltaController extends Controller
         }
 
         toastr('Processo de envio de e-mails iniciado!', 'success');
+
+        return redirect()->route('sisfalta.faltas.index');
+    }
+
+    public function sendCoords(Request $request)
+    {
+        $request->validate([
+            'periodo' => 'required'
+        ]);
+
+        $selectPeriodo = explode(',', $request->periodo);
+
+        $alunos = Aluno::withAndWhereHas('faltas', function ($q) use ($selectPeriodo) {
+            $q->where('data_inicio', $selectPeriodo[0])->where('data_fim', $selectPeriodo[1])->where('enviado', true);
+        })->with('curso')->get();
+
+        foreach ($alunos->groupBy('curso.id') as $alunosCoords) {
+
+            $this->dispatch(new SendMailCoordsJob($alunosCoords, $selectPeriodo));
+            /*$periodo = $selectPeriodo;
+            return view('sisfaltas.mails.mailCoords', compact('alunosCoords', 'periodo'));*/
+        }
+
+        toastr('Relatórios enviados com sucesso!', 'success');
 
         return redirect()->route('sisfalta.faltas.index');
     }

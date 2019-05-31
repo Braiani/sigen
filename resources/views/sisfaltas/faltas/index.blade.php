@@ -35,11 +35,14 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-2">
                                     <button id="gerarLista" class="btn btn-success btn-block">Selecionar</button>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-2">
                                     <button id="enviarEmail" class="btn btn-primary btn-block">Enviar E-mails</button>
+                                </div>
+                                <div class="col-2">
+                                    <button id="relatorioCoords" class="btn btn-info btn-block">Relatório Coords</button>
                                 </div>
                             </div>
                         </form>
@@ -62,6 +65,11 @@
             $("#gerarLista").on('click', function (e) {
                 e.preventDefault();
                 $('#form-faltas')[0].action = '{{ route('sisfalta.faltas.index') }}';
+                $('#form-faltas').trigger('submit');
+            });
+            $("#relatorioCoords").on('click', function (e) {
+                e.preventDefault();
+                $('#form-faltas')[0].action = '{{ route('sisfalta.faltas.relatorio.coords') }}';
                 $('#form-faltas').trigger('submit');
             });
         });
